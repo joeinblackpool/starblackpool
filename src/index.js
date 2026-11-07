@@ -29,8 +29,8 @@ const MAPS = {
 };
 
 // Hero photos: WebP for modern browsers, the original JPEG for anything older.
-const HEROES = { "": ["cremorne", ".55", ".35", "30%"], parlour: ["parlour", ".6", ".4", "35%"], tower: ["tower", ".55", ".35", "40%"], promenade: ["promenade", ".55", ".35", "45%"], deckchairs: ["deckchairs", ".5", ".3", "72%"] };
-const HERO_FOR = { "/": "cremorne", "/whats-on": "deckchairs", "/food-and-drink": "parlour", "/find-us": "promenade", "/contact": "tower" };
+const HEROES = { "": ["cremorne", ".55", ".35", "30%"], parlour: ["parlour", ".6", ".4", "35%"], tower: ["tower", ".55", ".35", "40%"], promenade: ["promenade", ".55", ".35", "45%"], cabaret: ["cabaret", ".5", ".3", "30%"] };
+const HERO_FOR = { "/": "cremorne", "/whats-on": "cabaret", "/food-and-drink": "parlour", "/find-us": "promenade", "/contact": "tower" };
 const HERO_WEBP = Object.entries(HEROES).map(([cls, [img, a, b]]) =>
   `.hero${cls ? "." + cls : ""}{background-image:linear-gradient(180deg,rgba(40,4,12,${a}),rgba(40,4,12,${b}) 40%,rgba(10,4,6,.92)),image-set(url(/hero-${img}.webp) type("image/webp"),url(/hero-${img}.jpg) type("image/jpeg"))}`).join("\n");
 
@@ -104,7 +104,7 @@ h2{text-shadow:0 0 18px rgba(242,214,141,.25)}
 .hero.sub h1 span{color:#ffe3e7}
 .hero.tower{background:linear-gradient(180deg,rgba(40,4,12,.55),rgba(40,4,12,.35) 40%,rgba(10,4,6,.92)),url(/hero-tower.jpg) center 40%/cover}
 .hero.promenade{background:linear-gradient(180deg,rgba(40,4,12,.55),rgba(40,4,12,.35) 40%,rgba(10,4,6,.92)),url(/hero-promenade.jpg) center 45%/cover}
-.hero.deckchairs{background:linear-gradient(180deg,rgba(40,4,12,.5),rgba(40,4,12,.3) 40%,rgba(10,4,6,.92)),url(/hero-deckchairs.jpg) center 72%/cover}
+.hero.cabaret{background:linear-gradient(180deg,rgba(40,4,12,.5),rgba(40,4,12,.3) 40%,rgba(10,4,6,.92)),url(/hero-cabaret.jpg) center 30%/cover}
 .logo img{display:block;height:64px;width:auto}
 .hero .brand{display:block;width:min(360px,70vw);height:auto;margin:0 auto 6px;filter:drop-shadow(0 4px 18px rgba(0,0,0,.7))}
 @media (max-width:560px){.logo img{height:52px}}
@@ -140,9 +140,9 @@ const FOOD = [
   ["Sunday", "10am to 2pm, then 7:30pm to 10pm"],
 ];
 const EVENTS = [
-  { name: "Delia Rocks", days: "Every Friday and Saturday", time: "7pm to 11pm", text: "Delia Rocks at The Star, Friday and Saturday from 7pm till 11pm." },
+  { name: "Delia Deck", days: "Every Friday and Saturday", time: "7pm to 11pm", text: "Delia Deck at The Star, Friday and Saturday from 7pm till 11pm." },
   { name: "Lee Star Sundays", days: "Every Sunday", time: "3pm to 7pm", text: "Lee Star Sundays at The Star, from 3pm to 7pm." },
-  { name: "Laura's Rock Revival", days: "Every Sunday", time: "from 7pm", text: "Laura's Rock Revival at The Star, Sunday from 7pm." },
+  { name: "Lovers Rock Revival", days: "Every Sunday", time: "from 7pm", text: "Lovers Rock Revival at The Star, Sunday from 7pm." },
   { name: "Monday to Thursday", days: "Monday to Thursday", time: "10am to 11:30pm", text: "Good atmosphere here, warm welcome and feel-good music." },
 ];
 
@@ -171,7 +171,7 @@ ${preOpening() ? `<span class="opening"><b>Grand opening</b> · Friday 13 Novemb
 <div class="wrap">
 <h2>Welcome to The Star</h2>
 <p>The Star is at ${BIZ.street}, Blackpool ${BIZ.postcode}. Open daily from 10am till 11:30pm, seven days a week, with live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands only.</p>
-<p>From Monday to Thursday you will find a good atmosphere, a warm welcome and feel-good music. Delia Rocks is on Friday and Saturday, and on Sunday it's Lee Star Sundays followed by Laura's Rock Revival.</p>
+<p>From Monday to Thursday you will find a good atmosphere, a warm welcome and feel-good music. Delia Deck is on Friday and Saturday, and on Sunday it's Lee Star Sundays followed by Lovers Rock Revival.</p>
 <h2>Live entertainment every weekend</h2>
 ${eventCards()}
 <p><a href="/whats-on">See the full weekly entertainment guide</a></p>
@@ -186,18 +186,18 @@ ${mapButtons()}
   },
   "/whats-on": {
     title: "What's On at The Star Blackpool | Live Entertainment & Cabaret",
-    desc: "Live entertainment at The Star, Blackpool: Delia Rocks Fri and Sat, Lee Star Sundays, Laura's Rock Revival, open mic, cabaret.",
-    html: () => `${subHero("deckchairs", `<p class="crumbs"><a href="/">Home</a> / What's on</p>
+    desc: "Live entertainment at The Star, Blackpool: Delia Deck Fri and Sat, Lee Star Sundays, Lovers Rock Revival, open mic, cabaret.",
+    html: () => `${subHero("cabaret", `<p class="crumbs"><a href="/">Home</a> / What's on</p>
 <h1>What's on at The <span>Star</span></h1>
 <p class="lead">Live entertainment, open mic nights and cabaret at The Star on Bond Street, Blackpool. Here is our regular week.</p>`)}<div class="wrap">
 ${eventCards()}
 <h2>Weekly guide</h2>
 ${table([
   ["Monday to Thursday", "Good atmosphere, warm welcome and feel-good music"],
-  ["Friday", "Delia Rocks, 7pm to 11pm"],
-  ["Saturday", "Delia Rocks, 7pm to 11pm"],
+  ["Friday", "Delia Deck, 7pm to 11pm"],
+  ["Saturday", "Delia Deck, 7pm to 11pm"],
   ["Sunday afternoon", "Lee Star Sundays, 3pm to 7pm"],
-  ["Sunday evening", "Laura's Rock Revival, from 7pm"],
+  ["Sunday evening", "Lovers Rock Revival, from 7pm"],
 ])}
 <h2>Open mic and cabaret</h2>
 <p>The Star hosts open mic nights and cabaret as well as our regular acts. To find out more, call <a href="tel:${BIZ.phoneIntl}">${BIZ.phone}</a> or email <a href="mailto:${BIZ.email}">${BIZ.email}</a>.</p>
@@ -281,8 +281,8 @@ function jsonLd(path, page) {
     graph.push({ "@type": "Event", name: "Grand opening of The Star, Blackpool", startDate: OPENING_DAY + "T10:00:00+00:00", endDate: OPENING_DAY + "T23:30:00+00:00",
       eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
       location: { "@type": "Place", name: BIZ.name, address: POSTAL }, organizer: { "@type": "Organization", name: BIZ.name, url: ORIGIN + "/" },
-      performer: { "@type": "PerformingGroup", name: "Delia Rocks" }, image: [ORIGIN + "/og.png"], isAccessibleForFree: true,
-      description: "The Star opens on Friday 13 November, 10am till 11:30pm, with Delia Rocks from 7pm till 11pm." });
+      performer: { "@type": "PerformingGroup", name: "Delia Deck" }, image: [ORIGIN + "/og.png"], isAccessibleForFree: true,
+      description: "The Star opens on Friday 13 November, 10am till 11:30pm, with Delia Deck from 7pm till 11pm." });
   }
   if (path !== "/") {
     const nav = PAGES.find(p => p.path === path).nav;
@@ -331,7 +331,7 @@ function sitemap() {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${PAGES.map(p => `<url><loc>${ORIGIN}${p.path}</loc><lastmod>${UPDATED}</lastmod></url>`).join("\n")}\n</urlset>\n`;
 }
 const ROBOTS = `User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml\n`;
-const LLMS = `# The Star, Blackpool\n\n> The Star, ${ADDR}. Open 10am to 11:30pm, seven days a week. Live entertainment, open mic nights and cabaret. Food served daily. Daily drinks offers, premium brands only.\n\n- Phone: ${BIZ.phone}\n- Email: ${BIZ.email}\n- Food: Monday to Saturday 10am to 7pm; Sunday 10am to 2pm and 7:30pm to 10pm\n- Entertainment: Delia Rocks (Friday and Saturday 7pm to 11pm); Lee Star Sundays (3pm to 7pm); Laura's Rock Revival (Sunday from 7pm); feel-good music Monday to Thursday\n\n## Pages\n${PAGES.map(p => `- [${p.nav}](${ORIGIN}${p.path})`).join("\n")}\n`;
+const LLMS = `# The Star, Blackpool\n\n> The Star, ${ADDR}. Open 10am to 11:30pm, seven days a week. Live entertainment, open mic nights and cabaret. Food served daily. Daily drinks offers, premium brands only.\n\n- Phone: ${BIZ.phone}\n- Email: ${BIZ.email}\n- Food: Monday to Saturday 10am to 7pm; Sunday 10am to 2pm and 7:30pm to 10pm\n- Entertainment: Delia Deck (Friday and Saturday 7pm to 11pm); Lee Star Sundays (3pm to 7pm); Lovers Rock Revival (Sunday from 7pm); feel-good music Monday to Thursday\n\n## Pages\n${PAGES.map(p => `- [${p.nav}](${ORIGIN}${p.path})`).join("\n")}\n`;
 
 const SECURITY = {
   "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
