@@ -225,6 +225,9 @@ ${table([
 <h1>Find The Star</h1>
 <p class="lead">${ADDR}</p>`)}<div class="wrap">
 ${mapButtons()}
+<h2>Getting here</h2>
+<p>The Star is at ${BIZ.street} in Blackpool. For a sat nav, use the postcode ${BIZ.postcode}. Tap Google Maps, Apple Maps or Waze above and your phone will plan the route to our door. If you get lost, call us on <a href="tel:${BIZ.phoneIntl}">${BIZ.phone}</a> and we will talk you in.</p>
+<p>The bar is open from 10am until 11:30pm every day, so you can drop in any time. Food is served from 10am, and at the weekend there is live entertainment: Delia Rocks on Friday and Saturday from 7pm, then Lee Star Sundays and Laura's Rock Revival on Sunday. <a href="/whats-on">See what's on this week</a>.</p>
 <h2>Contact</h2>
 ${table([
   ["Address", `${BIZ.name}<br>${BIZ.street}<br>${BIZ.town}<br>${BIZ.postcode}`],
@@ -294,6 +297,9 @@ function jsonLd(path, page) {
   return JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c");
 }
 
+// The stylesheet is served as its own file, cached for a year; the version changes whenever the CSS does.
+const CSS_VER = (() => { let h = 5381; for (let i = 0; i < CSS.length; i++) h = (h * 33 + CSS.charCodeAt(i)) >>> 0; return h.toString(36); })();
+
 const FONTS = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap";
 
 function render(path, status = 200) {
@@ -314,7 +320,7 @@ ${status === 200 ? `<link rel="canonical" href="${url}"><meta name="robots" cont
 <meta property="og:image" content="${ORIGIN}/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The Star, 29-31 Bond Street, Blackpool">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${page.title}"><meta name="twitter:description" content="${page.desc}"><meta name="twitter:image" content="${ORIGIN}/og.png">
 ${status === 200 ? `<script type="application/ld+json">${jsonLd(path, page)}</script>` : ""}
-<style>${CSS}</style></head><body>
+<link rel="stylesheet" href="/style.css?v=${CSS_VER}"></head><body>
 <header><div class="wrap bar"><a class="logo" href="/"><picture><source srcset="/logo-sm.webp" type="image/webp"><img src="/logo-sm.png" width="150" height="88" alt="The Star, Blackpool"></picture></a><nav aria-label="Main"><ul>${nav}</ul></nav></div></header>
 <main>${page.html()}</main>
 <footer><div class="wrap grid">
@@ -362,6 +368,12 @@ async function handle(request, env) {
     case "/sitemap.xml": return txt(sitemap(), "application/xml; charset=utf-8");
     case "/llms.txt": return txt(LLMS, "text/plain; charset=utf-8");
     case "/favicon.svg": return txt(ICON, "image/svg+xml", 31536000);
+    case "/style.css": {
+      const r = txt(CSS, "text/css; charset=utf-8", 31536000);
+      if (url.searchParams.get("v") === CSS_VER) r.headers.set("cache-control", "public, max-age=31536000, immutable");
+      else r.headers.set("cache-control", "public, max-age=300");
+      return r;
+    }
     case "/favicon.ico": return Response.redirect(ORIGIN + "/favicon.svg", 301);
   }
   // Binary assets (og.png, apple-touch-icon.png) and verification files come from the assets folder.
