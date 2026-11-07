@@ -11,5 +11,6 @@
     { "pattern": "starblackpool.uk", "custom_domain": true },
     { "pattern": "www.starblackpool.uk", "custom_domain": true }
   ],
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "previews": {}
 }

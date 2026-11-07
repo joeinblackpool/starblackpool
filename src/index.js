@@ -4,7 +4,7 @@
 
 const MAIN = "starblackpool.co.uk";
 const ORIGIN = "https://" + MAIN;
-const UPDATED = "2026-11-06";
+const UPDATED = "2026-11-07";
 
 // Opening night: banner and Event markup show until the day after, then disappear by themselves.
 const OPENING_DAY = "2026-11-13";
@@ -27,6 +27,12 @@ const MAPS = {
   apple: `https://maps.apple.com/?q=${Q}`,
   waze: `https://waze.com/ul?q=${Q}&navigate=yes`,
 };
+
+// Hero photos: WebP for modern browsers, the original JPEG for anything older.
+const HEROES = { "": ["cremorne", ".55", ".35", "30%"], parlour: ["parlour", ".6", ".4", "35%"], tower: ["tower", ".55", ".35", "40%"], promenade: ["promenade", ".55", ".35", "45%"], deckchairs: ["deckchairs", ".5", ".3", "72%"] };
+const HERO_FOR = { "/": "cremorne", "/whats-on": "deckchairs", "/food-and-drink": "parlour", "/find-us": "promenade", "/contact": "tower" };
+const HERO_WEBP = Object.entries(HEROES).map(([cls, [img, a, b]]) =>
+  `.hero${cls ? "." + cls : ""}{background-image:linear-gradient(180deg,rgba(40,4,12,${a}),rgba(40,4,12,${b}) 40%,rgba(10,4,6,.92)),image-set(url(/hero-${img}.webp) type("image/webp"),url(/hero-${img}.jpg) type("image/jpeg"))}`).join("\n");
 
 const CSS = `:root{--bg:#0a0406;--velvet:#3d0a14;--oxblood:#5c0f1e;--crimson:#a3162b;--neon:#ff2e4d;--ink:#f7ece0;--muted:#d9bfb4;--gold:#d9b25f;--gold2:#f2d68d;--line:#6b4a1f;--panel:#1a070b}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
@@ -103,7 +109,12 @@ h2{text-shadow:0 0 18px rgba(242,214,141,.25)}
 .hero .brand{display:block;width:min(360px,70vw);height:auto;margin:0 auto 6px;filter:drop-shadow(0 4px 18px rgba(0,0,0,.7))}
 @media (max-width:560px){.logo img{height:52px}}
 .opening{display:inline-block;margin:0 0 18px;padding:10px 18px;border:2px solid var(--gold);border-radius:4px;background:rgba(10,4,6,.7);color:var(--gold2);font:800 15px/1.3 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;box-shadow:0 0 18px rgba(242,214,141,.35)}
-.opening b{color:#fff;text-shadow:0 0 8px var(--neon),0 0 18px var(--neon)}`;
+.opening b{color:#fff;text-shadow:0 0 8px var(--neon),0 0 18px var(--neon)}
+nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px}
+footer a{display:inline-block;padding:8px 0}
+.crumbs a{display:inline-block;padding:6px 0}
+.kicker,h1 span,.bulbs,header:after{will-change:opacity}
+${HERO_WEBP}`;
 
 const STAR = `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2a8"/><stop offset=".45" stop-color="#f2b81c"/><stop offset=".7" stop-color="#ffe066"/><stop offset="1" stop-color="#b37a08"/></linearGradient></defs><rect width="64" height="64" rx="12" fill="#0a0406"/><path fill="url(#g)" fill-rule="evenodd" stroke="#7a4d00" stroke-width="1" d="M32 4l7.6 18.2 19.6 1.5-15 12.8 4.6 19.1L32 45.3 15.2 55.6l4.6-19.1-15-12.8 19.6-1.5zM32 18.5l-4.1 9.8-10.6.8 8.1 6.9-2.5 10.3 9.1-5.6 9.1 5.6-2.5-10.3 8.1-6.9-10.6-.8z"/></svg>`;
 
@@ -149,9 +160,9 @@ const callBtn = `<a class="btn" href="tel:${BIZ.phoneIntl}">Call ${BIZ.phone}</a
 const BODY = {
   "/": {
     title: "The Star Blackpool | Pub, Live Entertainment, Food & Drinks",
-    desc: "The Star pub on Bond Street, Blackpool FY4 1BQ. Open 10am to 11:30pm daily with live entertainment, open mic, cabaret, food served daily and drinks offers.",
+    desc: "The Star pub, Bond Street, Blackpool FY4 1BQ. Live entertainment, open mic, cabaret and food daily. Open 10am to 11:30pm.",
     html: () => `<section class="hero"><span class="glow"></span>${CHANDELIER}<span class="lamp l"></span><span class="lamp r"></span><span class="bulbs"></span><div class="wrap">
-<img class="brand" src="/logo.png" width="600" height="352" alt="" fetchpriority="high">
+<picture><source srcset="/logo.webp" type="image/webp"><img class="brand" src="/logo.png" width="600" height="351" alt="The Star, Blackpool – pub on Bond Street"></picture>
 ${preOpening() ? `<span class="opening"><b>Grand opening</b> · Friday 13 November · from 10am</span><br>` : ""}<span class="kicker">Bond Street · Blackpool</span>
 <h1>The <span>Star</span>, Blackpool</h1>
 <p class="lead">Live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands. Open 10am to 11:30pm, seven days a week, at ${ADDR}.</p>
@@ -175,7 +186,7 @@ ${mapButtons()}
   },
   "/whats-on": {
     title: "What's On at The Star Blackpool | Live Entertainment & Cabaret",
-    desc: "Weekly entertainment at The Star, Bond Street, Blackpool: Delia Rocks Friday and Saturday, Lee Star Sundays, Laura's Rock Revival, open mic and cabaret.",
+    desc: "Live entertainment at The Star, Blackpool: Delia Rocks Fri and Sat, Lee Star Sundays, Laura's Rock Revival, open mic, cabaret.",
     html: () => `${subHero("deckchairs", `<p class="crumbs"><a href="/">Home</a> / What's on</p>
 <h1>What's on at The <span>Star</span></h1>
 <p class="lead">Live entertainment, open mic nights and cabaret at The Star on Bond Street, Blackpool. Here is our regular week.</p>`)}<div class="wrap">
@@ -195,7 +206,7 @@ ${table([
   },
   "/food-and-drink": {
     title: "Food & Drink at The Star Blackpool | Served Daily",
-    desc: "Food served daily at The Star, Bond Street, Blackpool. Monday to Saturday 10am to 7pm, Sunday 10am to 2pm and 7:30pm to 10pm. Daily drinks offers, premium brands.",
+    desc: "Food served daily at The Star, Bond Street, Blackpool: Mon to Sat 10am to 7pm, Sunday lunch and evening. Daily drinks offers.",
     html: () => `${subHero("parlour", `<p class="crumbs"><a href="/">Home</a> / Food &amp; drink</p>
 <h1>Food and drink at The Star</h1>
 <p class="lead">Food served daily, and daily drinks offers on premium brands only.</p>`)}<div class="wrap">
@@ -209,7 +220,7 @@ ${table([
   },
   "/find-us": {
     title: "Find The Star | 29-31 Bond Street, Blackpool FY4 1BQ",
-    desc: "Contact and directions for The Star pub, 29-31 Bond Street, Blackpool FY4 1BQ. Phone 07843 839288. Open 10am to 11:30pm daily.",
+    desc: "Directions to The Star pub, 29-31 Bond Street, Blackpool FY4 1BQ. Google Maps, Apple Maps and Waze. Phone 07843 839288.",
     html: () => `${subHero("promenade", `<p class="crumbs"><a href="/">Home</a> / Find us</p>
 <h1>Find The Star</h1>
 <p class="lead">${ADDR}</p>`)}<div class="wrap">
@@ -226,7 +237,7 @@ ${table([
   },
   "/contact": {
     title: "Contact The Star Blackpool | Phone, Email & Opening Hours",
-    desc: "Contact The Star, 29-31 Bond Street, Blackpool FY4 1BQ. Call 07843 839288 or email us. Open 10am to 11:30pm daily, food served every day.",
+    desc: "Contact The Star, 29-31 Bond Street, Blackpool FY4 1BQ. Call 07843 839288 or email us. Open 10am to 11:30pm every day.",
     html: () => `${subHero("tower", `<p class="crumbs"><a href="/">Home</a> / Contact</p>
 <h1>Contact The <span>Star</span></h1>
 <p class="lead">Call, email or just pop in. We are open 10am to 11:30pm, seven days a week.</p>`)}<div class="wrap">
@@ -241,6 +252,8 @@ ${table([
   },
 };
 
+const POSTAL = { "@type": "PostalAddress", streetAddress: BIZ.street, addressLocality: BIZ.town, addressRegion: "Lancashire", postalCode: BIZ.postcode, addressCountry: "GB" };
+
 function jsonLd(path, page) {
   const url = ORIGIN + path;
   const graph = [
@@ -251,12 +264,15 @@ function jsonLd(path, page) {
       url: ORIGIN + "/",
       telephone: BIZ.phoneIntl,
       email: BIZ.email,
-      image: ORIGIN + "/og.png",
-      logo: ORIGIN + "/logo.png",
-      address: { "@type": "PostalAddress", streetAddress: BIZ.street, addressLocality: BIZ.town, postalCode: BIZ.postcode, addressCountry: "GB" },
+      image: [ORIGIN + "/og.png", ORIGIN + "/hero-cremorne.jpg"],
+      logo: { "@type": "ImageObject", url: ORIGIN + "/logo.png", width: 600, height: 351 },
+      address: POSTAL,
       hasMap: MAPS.google,
       openingHoursSpecification: [{ "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], opens: "10:00", closes: "23:30" }],
-      areaServed: "Blackpool",
+      areaServed: { "@type": "City", name: "Blackpool" },
+      currenciesAccepted: "GBP",
+      publicAccess: true,
+      amenityFeature: [{ "@type": "LocationFeatureSpecification", name: "Live entertainment", value: true }, { "@type": "LocationFeatureSpecification", name: "Food served daily", value: true }],
     },
     { "@type": "WebSite", "@id": ORIGIN + "/#site", url: ORIGIN + "/", name: "The Star Blackpool", publisher: { "@id": ORIGIN + "/#pub" }, inLanguage: "en-GB" },
     { "@type": "WebPage", "@id": url + "#page", url, name: page.title, description: page.desc, isPartOf: { "@id": ORIGIN + "/#site" }, about: { "@id": ORIGIN + "/#pub" }, dateModified: UPDATED, inLanguage: "en-GB" },
@@ -264,7 +280,8 @@ function jsonLd(path, page) {
   if (path === "/" && preOpening()) {
     graph.push({ "@type": "Event", name: "Grand opening of The Star, Blackpool", startDate: OPENING_DAY + "T10:00:00+00:00", endDate: OPENING_DAY + "T23:30:00+00:00",
       eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-      location: { "@id": ORIGIN + "/#pub" }, organizer: { "@id": ORIGIN + "/#pub" }, image: ORIGIN + "/og.png", isAccessibleForFree: true,
+      location: { "@type": "Place", name: BIZ.name, address: POSTAL }, organizer: { "@type": "Organization", name: BIZ.name, url: ORIGIN + "/" },
+      performer: { "@type": "PerformingGroup", name: "Delia Rocks" }, image: [ORIGIN + "/og.png"], isAccessibleForFree: true,
       description: "The Star opens on Friday 13 November, 10am till 11:30pm, with Delia Rocks from 7pm till 11pm." });
   }
   if (path !== "/") {
@@ -276,6 +293,8 @@ function jsonLd(path, page) {
   }
   return JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c");
 }
+
+const FONTS = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap";
 
 function render(path, status = 200) {
   const page = BODY[path] || {
@@ -289,14 +308,14 @@ function render(path, status = 200) {
 <title>${page.title}</title><meta name="description" content="${page.desc}">
 ${status === 200 ? `<link rel="canonical" href="${url}"><meta name="robots" content="index,follow,max-image-preview:large">` : `<meta name="robots" content="noindex">`}
 <meta name="theme-color" content="#0a0406">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="${FONTS}" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${FONTS}"></noscript>${HERO_FOR[path] && BODY[path] ? `<link rel="preload" as="image" href="/hero-${HERO_FOR[path]}.webp" type="image/webp" fetchpriority="high">` : ""}<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website"><meta property="og:site_name" content="The Star Blackpool"><meta property="og:locale" content="en_GB">
 <meta property="og:title" content="${page.title}"><meta property="og:description" content="${page.desc}"><meta property="og:url" content="${url}">
 <meta property="og:image" content="${ORIGIN}/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The Star, 29-31 Bond Street, Blackpool">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${page.title}"><meta name="twitter:description" content="${page.desc}"><meta name="twitter:image" content="${ORIGIN}/og.png">
 ${status === 200 ? `<script type="application/ld+json">${jsonLd(path, page)}</script>` : ""}
 <style>${CSS}</style></head><body>
-<header><div class="wrap bar"><a class="logo" href="/"><img src="/logo-sm.png" width="150" height="88" alt="The Star, Blackpool"></a><nav aria-label="Main"><ul>${nav}</ul></nav></div></header>
+<header><div class="wrap bar"><a class="logo" href="/"><picture><source srcset="/logo-sm.webp" type="image/webp"><img src="/logo-sm.png" width="150" height="88" alt="The Star, Blackpool"></picture></a><nav aria-label="Main"><ul>${nav}</ul></nav></div></header>
 <main>${page.html()}</main>
 <footer><div class="wrap grid">
 <div><strong>The Star</strong><br>${BIZ.street}<br>${BIZ.town} ${BIZ.postcode}</div>
@@ -348,7 +367,12 @@ async function handle(request, env) {
   // Binary assets (og.png, apple-touch-icon.png) and verification files come from the assets folder.
   if (env && env.ASSETS) {
     const r = await env.ASSETS.fetch(request);
-    if (r.status === 200) return r;
+    if (r.status !== 404) {
+      if (r.status !== 200 || !/\.(png|jpe?g|webp|svg|ico)$/i.test(path)) return r;
+      const out = new Response(r.body, r);
+      out.headers.set("cache-control", "public, max-age=86400, stale-while-revalidate=604800");
+      return out;
+    }
   }
   return render(path, 404);
 }
