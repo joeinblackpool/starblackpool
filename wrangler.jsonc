@@ -1,0 +1,15 @@
+{
+  "name": "starblackpool",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
+  "routes": [
+    { "pattern": "starblackpool.co.uk", "custom_domain": true },
+    { "pattern": "www.starblackpool.co.uk", "custom_domain": true },
+    { "pattern": "starblackpool.com", "custom_domain": true },
+    { "pattern": "www.starblackpool.com", "custom_domain": true },
+    { "pattern": "starblackpool.uk", "custom_domain": true },
+    { "pattern": "www.starblackpool.uk", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}
