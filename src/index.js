@@ -163,14 +163,15 @@ const BODY = {
     desc: "The Star pub, Bond Street, Blackpool FY4 1BQ. Live entertainment, open mic, cabaret and food daily. Open 10am to 11:30pm.",
     html: () => `<section class="hero"><span class="glow"></span>${CHANDELIER}<span class="lamp l"></span><span class="lamp r"></span><span class="bulbs"></span><div class="wrap">
 <picture><source srcset="/logo.webp" type="image/webp"><img class="brand" src="/logo.png" width="600" height="351" alt="The Star, Blackpool – pub on Bond Street"></picture>
-${preOpening() ? `<span class="opening"><b>Grand opening</b> · Friday 13 November · from 10am</span><br>` : ""}<span class="kicker">Bond Street · Blackpool</span>
+${preOpening() ? `<span class="opening"><b>Grand opening</b> · Friday 13 November · from 10am<br>Free bubbly for everyone on arrival</span><br>` : ""}<span class="kicker">Bond Street · Blackpool</span>
 <h1>The <span>Star</span>, Blackpool</h1>
 <p class="lead">Live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands. Open 10am to 11:30pm, seven days a week, at ${ADDR}.</p>
 <div class="btns">${callBtn}<a class="btn alt" href="/whats-on">What's on</a><a class="btn alt" href="/find-us">Find us</a></div>
 </div></section>
 <div class="wrap">
 <h2>Welcome to The Star</h2>
-<p>The Star is at ${BIZ.street}, Blackpool ${BIZ.postcode}. Open daily from 10am till 11:30pm, seven days a week, with live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands only.</p>
+${preOpening() ? `<p><strong>Grand opening, Friday 13 November:</strong> everybody gets free bubbly as they come through the door. Doors open at 10am, with live entertainment from 7pm till 11pm.</p>
+` : ""}<p>The Star is at ${BIZ.street}, Blackpool ${BIZ.postcode}. Open daily from 10am till 11:30pm, seven days a week, with live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands only.</p>
 <p>From Monday to Thursday you will find a good atmosphere, a warm welcome and feel-good music. There is live entertainment on Friday and Saturday nights, and on Sunday it's Lee Star Sundays followed by Lovers Rock Revival.</p>
 <h2>Live entertainment every weekend</h2>
 ${eventCards()}
@@ -282,7 +283,7 @@ function jsonLd(path, page) {
       eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
       location: { "@type": "Place", name: BIZ.name, address: POSTAL }, organizer: { "@type": "Organization", name: BIZ.name, url: ORIGIN + "/" },
       image: [ORIGIN + "/og.png"], isAccessibleForFree: true,
-      description: "The Star opens on Friday 13 November, 10am till 11:30pm, with live entertainment from 7pm till 11pm." });
+      description: "The Star opens on Friday 13 November, 10am till 11:30pm, with live entertainment from 7pm till 11pm. Free bubbly for everyone on arrival." });
   }
   if (path !== "/") {
     const nav = PAGES.find(p => p.path === path).nav;
