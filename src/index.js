@@ -140,7 +140,7 @@ const FOOD = [
   ["Sunday", "10am to 2pm, then 7:30pm to 10pm"],
 ];
 const EVENTS = [
-  { name: "Delia Deck", days: "Every Friday and Saturday", time: "7pm to 11pm", text: "Delia Deck at The Star, Friday and Saturday from 7pm till 11pm." },
+  { name: "Friday and Saturday nights", days: "Every Friday and Saturday", time: "7pm to 11pm", text: "Live entertainment at The Star, Friday and Saturday from 7pm till 11pm." },
   { name: "Lee Star Sundays", days: "Every Sunday", time: "3pm to 7pm", text: "Lee Star Sundays at The Star, from 3pm to 7pm." },
   { name: "Lovers Rock Revival", days: "Every Sunday", time: "from 7pm", text: "Lovers Rock Revival at The Star, Sunday from 7pm." },
   { name: "Monday to Thursday", days: "Monday to Thursday", time: "10am to 11:30pm", text: "Good atmosphere here, warm welcome and feel-good music." },
@@ -163,15 +163,16 @@ const BODY = {
     desc: "The Star pub, Bond Street, Blackpool FY4 1BQ. Live entertainment, open mic, cabaret and food daily. Open 10am to 11:30pm.",
     html: () => `<section class="hero"><span class="glow"></span>${CHANDELIER}<span class="lamp l"></span><span class="lamp r"></span><span class="bulbs"></span><div class="wrap">
 <picture><source srcset="/logo.webp" type="image/webp"><img class="brand" src="/logo.png" width="600" height="351" alt="The Star, Blackpool – pub on Bond Street"></picture>
-${preOpening() ? `<span class="opening"><b>Grand opening</b> · Friday 13 November · from 10am</span><br>` : ""}<span class="kicker">Bond Street · Blackpool</span>
+${preOpening() ? `<span class="opening"><b>Grand opening</b> · Friday 13 November · from 10am<br>Free bubbly for everyone on arrival</span><br>` : ""}<span class="kicker">Bond Street · Blackpool</span>
 <h1>The <span>Star</span>, Blackpool</h1>
 <p class="lead">Live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands. Open 10am to 11:30pm, seven days a week, at ${ADDR}.</p>
 <div class="btns">${callBtn}<a class="btn alt" href="/whats-on">What's on</a><a class="btn alt" href="/find-us">Find us</a></div>
 </div></section>
 <div class="wrap">
 <h2>Welcome to The Star</h2>
-<p>The Star is at ${BIZ.street}, Blackpool ${BIZ.postcode}. Open daily from 10am till 11:30pm, seven days a week, with live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands only.</p>
-<p>From Monday to Thursday you will find a good atmosphere, a warm welcome and feel-good music. Delia Deck is on Friday and Saturday, and on Sunday it's Lee Star Sundays followed by Lovers Rock Revival.</p>
+${preOpening() ? `<p><strong>Grand opening, Friday 13 November:</strong> everybody gets free bubbly as they come through the door. Doors open at 10am, with live entertainment from 7pm till 11pm.</p>
+` : ""}<p>The Star is at ${BIZ.street}, Blackpool ${BIZ.postcode}. Open daily from 10am till 11:30pm, seven days a week, with live entertainment, open mic nights and cabaret, food served daily and daily drinks offers on premium brands only.</p>
+<p>From Monday to Thursday you will find a good atmosphere, a warm welcome and feel-good music. There is live entertainment on Friday and Saturday nights, and on Sunday it's Lee Star Sundays followed by Lovers Rock Revival.</p>
 <h2>Live entertainment every weekend</h2>
 ${eventCards()}
 <p><a href="/whats-on">See the full weekly entertainment guide</a></p>
@@ -186,7 +187,7 @@ ${mapButtons()}
   },
   "/whats-on": {
     title: "What's On at The Star Blackpool | Live Entertainment & Cabaret",
-    desc: "Live entertainment at The Star, Blackpool: Delia Deck Fri and Sat, Lee Star Sundays, Lovers Rock Revival, open mic, cabaret.",
+    desc: "Live entertainment at The Star, Blackpool: Fri and Sat nights, Lee Star Sundays, Lovers Rock Revival, open mic, cabaret.",
     html: () => `${subHero("cabaret", `<p class="crumbs"><a href="/">Home</a> / What's on</p>
 <h1>What's on at The <span>Star</span></h1>
 <p class="lead">Live entertainment, open mic nights and cabaret at The Star on Bond Street, Blackpool. Here is our regular week.</p>`)}<div class="wrap">
@@ -194,8 +195,8 @@ ${eventCards()}
 <h2>Weekly guide</h2>
 ${table([
   ["Monday to Thursday", "Good atmosphere, warm welcome and feel-good music"],
-  ["Friday", "Delia Deck, 7pm to 11pm"],
-  ["Saturday", "Delia Deck, 7pm to 11pm"],
+  ["Friday", "Live entertainment, 7pm to 11pm"],
+  ["Saturday", "Live entertainment, 7pm to 11pm"],
   ["Sunday afternoon", "Lee Star Sundays, 3pm to 7pm"],
   ["Sunday evening", "Lovers Rock Revival, from 7pm"],
 ])}
@@ -281,8 +282,8 @@ function jsonLd(path, page) {
     graph.push({ "@type": "Event", name: "Grand opening of The Star, Blackpool", startDate: OPENING_DAY + "T10:00:00+00:00", endDate: OPENING_DAY + "T23:30:00+00:00",
       eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
       location: { "@type": "Place", name: BIZ.name, address: POSTAL }, organizer: { "@type": "Organization", name: BIZ.name, url: ORIGIN + "/" },
-      performer: { "@type": "PerformingGroup", name: "Delia Deck" }, image: [ORIGIN + "/og.png"], isAccessibleForFree: true,
-      description: "The Star opens on Friday 13 November, 10am till 11:30pm, with Delia Deck from 7pm till 11pm." });
+      image: [ORIGIN + "/og.png"], isAccessibleForFree: true,
+      description: "The Star opens on Friday 13 November, 10am till 11:30pm, with live entertainment from 7pm till 11pm. Free bubbly for everyone on arrival." });
   }
   if (path !== "/") {
     const nav = PAGES.find(p => p.path === path).nav;
@@ -331,7 +332,7 @@ function sitemap() {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${PAGES.map(p => `<url><loc>${ORIGIN}${p.path}</loc><lastmod>${UPDATED}</lastmod></url>`).join("\n")}\n</urlset>\n`;
 }
 const ROBOTS = `User-agent: *\nAllow: /\n\nSitemap: ${ORIGIN}/sitemap.xml\n`;
-const LLMS = `# The Star, Blackpool\n\n> The Star, ${ADDR}. Open 10am to 11:30pm, seven days a week. Live entertainment, open mic nights and cabaret. Food served daily. Daily drinks offers, premium brands only.\n\n- Phone: ${BIZ.phone}\n- Email: ${BIZ.email}\n- Food: Monday to Saturday 10am to 7pm; Sunday 10am to 2pm and 7:30pm to 10pm\n- Entertainment: Delia Deck (Friday and Saturday 7pm to 11pm); Lee Star Sundays (3pm to 7pm); Lovers Rock Revival (Sunday from 7pm); feel-good music Monday to Thursday\n\n## Pages\n${PAGES.map(p => `- [${p.nav}](${ORIGIN}${p.path})`).join("\n")}\n`;
+const LLMS = `# The Star, Blackpool\n\n> The Star, ${ADDR}. Open 10am to 11:30pm, seven days a week. Live entertainment, open mic nights and cabaret. Food served daily. Daily drinks offers, premium brands only.\n\n- Phone: ${BIZ.phone}\n- Email: ${BIZ.email}\n- Food: Monday to Saturday 10am to 7pm; Sunday 10am to 2pm and 7:30pm to 10pm\n- Entertainment: live entertainment Friday and Saturday (7pm to 11pm); Lee Star Sundays (3pm to 7pm); Lovers Rock Revival (Sunday from 7pm); feel-good music Monday to Thursday\n\n## Pages\n${PAGES.map(p => `- [${p.nav}](${ORIGIN}${p.path})`).join("\n")}\n`;
 
 const SECURITY = {
   "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
