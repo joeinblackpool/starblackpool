@@ -74,6 +74,11 @@ th,td{text-align:left;padding:10px 8px;border-bottom:1px solid rgba(217,178,95,.
 th{color:var(--gold2);font-weight:600;width:45%}
 main{padding-bottom:48px}
 .note{color:var(--muted);font-size:15px;font-style:italic}
+.music{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 16px 0 12px;border:2px solid var(--gold);border-radius:999px;background:rgba(5,2,3,.92);color:var(--gold2);font:600 15px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.5)}
+.music:hover,.music:focus-visible{background:var(--oxblood);outline:none}
+.music svg{width:22px;height:22px;fill:currentColor;flex:none}
+.music .off{display:none}.music[aria-pressed="false"] .on{display:none}.music[aria-pressed="false"] .off{display:inline}
+footer{padding-bottom:84px!important}
 footer{border-top:3px double var(--gold);background:#050203;color:var(--muted);font-size:15px;padding:30px 0}
 footer .grid{margin:0}
 footer strong{color:var(--gold2);font-family:"Playfair Display",Georgia,serif;font-size:17px}
@@ -297,6 +302,25 @@ function jsonLd(path, page) {
 
 const FONTS = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap";
 
+const MUSIC = `<audio id="bgm" src="/wishing-on-a-star.mp3" preload="none" loop playsinline></audio>
+<button type="button" class="music" id="bgm-btn" aria-pressed="false" aria-label="Play background music"><svg class="on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg><svg class="off" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12A4.5 4.5 0 0 0 14 8v2.2l2.4 2.4.1-.6zM19 12c0 .9-.2 1.8-.5 2.6l1.5 1.5A9 9 0 0 0 14 3.2v2.1a7 7 0 0 1 5 6.7zM4.3 3 3 4.3 7.7 9H3v6h4l5 5v-6.7l4.3 4.3c-.7.5-1.4.9-2.3 1.2v2.1a9 9 0 0 0 3.7-1.8l2 2 1.3-1.3L4.3 3zM12 4 9.9 6.1 12 8.2V4z"/></svg><span class="lbl">Music</span></button>
+<script>(function(){var a=document.getElementById("bgm"),b=document.getElementById("bgm-btn");if(!a||!b)return;
+function g(k){try{return localStorage.getItem(k)}catch(e){return null}}function st(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function ss(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}function sg(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
+var EV=["pointerup","touchend","keydown","click"],muted=g("starMusic")==="off";a.volume=.5;
+function ui(on){b.setAttribute("aria-pressed",on?"true":"false");b.setAttribute("aria-label",on?"Mute background music":"Play background music")}
+function play(){var t=parseFloat(sg("starMusicT"));if(t>0&&!a.currentTime){try{a.currentTime=t}catch(e){}}var p=a.play();if(p&&p.then)p.then(function(){ui(true);off()},function(){ui(false)});else{ui(true);off()}}
+function stop(){a.pause();ui(false)}
+a.addEventListener("loadedmetadata",function(){var t=parseFloat(sg("starMusicT"));if(t>0&&t<a.duration)a.currentTime=t});
+b.addEventListener("click",function(e){e.stopPropagation();if(a.paused){muted=false;st("starMusic","on");play()}else{muted=true;st("starMusic","off");stop()}off()});
+function first(e){if(b.contains(e.target)||!a.paused)return;if(muted){off();return}play()}
+function off(){EV.forEach(function(t){document.removeEventListener(t,first,true)})}
+if(!muted){EV.forEach(function(t){document.addEventListener(t,first,{capture:true,passive:true})});
+if(g("starMusic")==="on"){a.preload="auto";var p=a.play();if(p&&p.then)p.then(function(){ui(true);off()},function(){})}}
+addEventListener("pagehide",function(){if(!a.paused)ss("starMusicT",String(a.currentTime))});
+document.addEventListener("visibilitychange",function(){if(document.hidden&&!a.paused){ss("starMusicT",String(a.currentTime))}});
+})();</script>`;
+
 function render(path, status = 200) {
   const page = BODY[path] || {
     title: "Page not found | The Star Blackpool",
@@ -322,7 +346,7 @@ ${status === 200 ? `<script type="application/ld+json">${jsonLd(path, page)}</sc
 <div><strong>The Star</strong><br>${BIZ.street}<br>${BIZ.town} ${BIZ.postcode}</div>
 <div><strong>Contact</strong><br><a href="tel:${BIZ.phoneIntl}">${BIZ.phone}</a><br><a href="mailto:${BIZ.email}">${BIZ.email}</a></div>
 <div><strong>Open daily</strong><br>10am to 11:30pm<br>Seven days a week</div>
-</div></footer></body></html>`;
+</div></footer>${MUSIC}</body></html>`;
   return new Response(html, { status, headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=300" } });
 }
 
@@ -367,9 +391,20 @@ async function handle(request, env) {
   }
   // Binary assets (og.png, apple-touch-icon.png) and verification files come from the assets folder.
   if (env && env.ASSETS) {
-    const r = await env.ASSETS.fetch(request);
+    let r = await env.ASSETS.fetch(request);
+    // Phones (iPhone Safari especially) need byte-range replies to play audio.
+    const range = request.headers.get("range");
+    if (r.status === 200 && range && request.method === "GET" && /\.mp3$/i.test(path)) {
+      const buf = await r.arrayBuffer();
+      const m = /bytes=(\d*)-(\d*)/.exec(range);
+      let start = m && m[1] ? +m[1] : 0, end = m && m[2] ? +m[2] : buf.byteLength - 1;
+      if (m && !m[1] && m[2]) { start = Math.max(0, buf.byteLength - +m[2]); end = buf.byteLength - 1; }
+      end = Math.min(end, buf.byteLength - 1);
+      if (!m || start > end) return new Response(null, { status: 416, headers: { "content-range": `bytes */${buf.byteLength}` } });
+      return new Response(buf.slice(start, end + 1), { status: 206, headers: { "content-type": "audio/mpeg", "content-range": `bytes ${start}-${end}/${buf.byteLength}`, "accept-ranges": "bytes", "content-length": String(end - start + 1), "cache-control": "public, max-age=604800" } });
+    }
     if (r.status !== 404) {
-      if (r.status !== 200 || !/\.(png|jpe?g|webp|svg|ico)$/i.test(path)) return r;
+      if (r.status !== 200 || !/\.(png|jpe?g|webp|svg|ico|mp3)$/i.test(path)) return r;
       const out = new Response(r.body, r);
       out.headers.set("cache-control", "public, max-age=86400, stale-while-revalidate=604800");
       return out;
